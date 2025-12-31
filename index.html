@@ -3,83 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday!</title>
+    <title>Happy Birthday</title>
     <style>
-        /* CSS STYLING */
-        :root { --bg-color: #fce4bd; }
-        body { background-color: var(--bg-color); margin: 0; font-family: 'Arial', sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 500px; position: relative; text-align: center; }
-        .lightbulb-container { display: flex; justify-content: space-around; padding: 0; margin-top: -10px; opacity: 0; transition: opacity 3s ease; }
-        .bulb { list-style: none; width: 30px; height: 40px; border-radius: 50%; background: #999; position: relative; }
-        .bulb.active.yellow { background: #ffff00; box-shadow: 0 0 20px #ffff00; }
-        .bulb.active.red { background: #ff4d4d; box-shadow: 0 0 20px #ff4d4d; }
-        .bulb.active.blue { background: #4d94ff; box-shadow: 0 0 20px #4d94ff; }
-        .bulb.active.green { background: #5cd65c; box-shadow: 0 0 20px #5cd65c; }
-        .banner-wrapper { margin-top: 50px; opacity: 0; transform: translateY(-50px); transition: all 4s ease; font-weight: bold; font-size: 2rem; color: #4a908f; }
-        .balloon { width: 50px; height: 70px; border-radius: 50%; position: absolute; bottom: -100px; animation: floatUp 10s linear forwards; }
-        @keyframes floatUp { to { transform: translateY(-120vh) rotate(10deg); } }
-        .cake-container { position: absolute; bottom: 180px; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 4s ease; }
-        .cake { width: 150px; height: 100px; background: #6d4c41; border-radius: 10px; position: relative; border-bottom: 5px solid #4e342e; }
-        .candle { width: 8px; height: 30px; background: #ff80ab; margin: 0 auto; position: relative; top: -20px; }
-        .flame { width: 12px; height: 18px; background: #ffeb3b; border-radius: 50% 50% 20% 20%; position: absolute; top: -20px; left: -2px; opacity: 0; transition: opacity 2s; box-shadow: 0 0 10px orange; }
-        .controls { position: fixed; bottom: 40px; width: 100%; left: 0; }
-        button { background: #3c56a5; color: white; border: none; padding: 15px 25px; font-size: 1rem; border-radius: 8px; cursor: pointer; }
-        .message-box { display: none; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 15px; width: 80%; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 10; }
+        body { background-color: #fff5e6; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; color: #333; overflow-x: hidden; }
+        .container { padding: 20px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        
+        /* Sober Decorations */
+        .decoration { font-size: 50px; margin: 20px; opacity: 0; transition: opacity 2s ease; }
+        .banner { font-size: 28px; font-weight: bold; color: #d4a373; margin: 20px 0; opacity: 0; transform: translateY(-20px); transition: all 2s ease; }
+        
+        /* Message Styling */
+        .message-box { display: none; background: white; padding: 25px; border-radius: 15px; border: 1px solid #fae1dd; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 85%; max-width: 400px; margin-top: 20px; }
+        #typing-text { line-height: 1.6; font-size: 16px; text-align: left; }
+
+        /* Simple Buttons */
+        #btn { background: #d4a373; color: white; border: none; padding: 15px 30px; border-radius: 30px; font-size: 16px; cursor: pointer; margin-top: auto; margin-bottom: 50px; transition: transform 0.2s; }
+        #btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <ul class="lightbulb-container" id="bulbs">
-            <li class="bulb yellow"></li><li class="bulb red"></li><li class="bulb blue"></li><li class="bulb green"></li><li class="bulb red"></li><li class="bulb yellow"></li>
-        </ul>
-        <div class="banner-wrapper" id="banner">HAPPY BIRTHDAY</div>
-        <div id="balloons-zone"></div>
-        <div class="cake-container" id="cake-section">
-            <div class="candle"><div class="flame" id="flame"></div></div>
-            <div class="cake"></div>
+        <div id="lights" class="decoration">💡✨🎈</div>
+        <div id="banner" class="banner">✨ HAPPY BIRTHDAY ✨</div>
+        <div id="cake" class="decoration">🎂</div>
+
+        <div id="message-box" class="message-box">
+            <p id="typing-text"></p>
         </div>
-        <div id="message-box" class="message-box"><p id="typed-text"></p></div>
-        <div class="controls"><button id="action-btn">LET'S DECORATE</button></div>
+
+        <button id="btn">Click to Start</button>
     </div>
 
-    <audio id="bday-music" loop><source src="https://raw.githubusercontent.com/Ansh-Rathod/Happy-Birthday/main/music.mp3" type="audio/mpeg"></audio>
+    <audio id="piano" loop><source src="https://raw.githubusercontent.com/Ansh-Rathod/Happy-Birthday/main/music.mp3"></audio>
 
     <script>
-        const btn = document.getElementById('action-btn');
-        const music = document.getElementById('bday-music');
+        const btn = document.getElementById('btn');
+        const piano = document.getElementById('piano');
         let step = 0;
-        const labels = ["LET'S DECORATE", "TURN ON LIGHTS", "PLAY MUSIC", "FLY WITH BALLOONS", "MOST DELICIOUS CAKE EVER", "LIGHT CANDLE", "HAPPY BIRTHDAY", "A MESSAGE FOR YOU"];
+        const tasks = ["Turn on Lights", "Play Music", "Show Banner", "Bring Cake", "A Message for You"];
 
-        btn.addEventListener('click', () => {
+        btn.onclick = () => {
             step++;
-            if(step === 1) { document.getElementById('banner').style.opacity = '1'; document.getElementById('banner').style.transform = 'translateY(0)'; }
-            if(step === 2) { document.getElementById('bulbs').style.opacity = '1'; document.querySelectorAll('.bulb').forEach(b => b.classList.add('active')); }
-            if(step === 3) { music.play(); }
-            if(step === 4) { 
-                for(let i=0; i<15; i++) {
-                    setTimeout(() => {
-                        const b = document.createElement('div');
-                        b.className = 'balloon';
-                        b.style.left = Math.random() * 90 + '%';
-                        b.style.backgroundColor = ['#ff7675','#74b9ff','#55efc4','#ffeaa7'][Math.floor(Math.random()*4)];
-                        document.getElementById('balloons-zone').appendChild(b);
-                    }, i * 300);
-                }
-            }
-            if(step === 5) { document.getElementById('cake-section').style.opacity = '1'; }
-            if(step === 6) { document.getElementById('flame').style.opacity = '1'; }
-            if(step === 8) {
+            if(step == 1) document.getElementById('lights').style.opacity = '1';
+            if(step == 2) piano.play();
+            if(step == 3) { document.getElementById('banner').style.opacity = '1'; document.getElementById('banner').style.transform = 'translateY(0)'; }
+            if(step == 4) document.getElementById('cake').style.opacity = '1';
+            if(step == 5) {
                 btn.style.display = 'none';
                 document.getElementById('message-box').style.display = 'block';
-                const text = "Happy Birthday!🎂 May your day be as incredible as you are, filled with laughter, love, and everything that brings you joy, surrounded by cherished friends and family. This special day marks another amazing year of you, and I'm so grateful for the light you bring into the world; I hope this next chapter brings exciting adventures, big dreams coming true, and endless happy memories, reminding you how truly wonderful you are! ❤️✨️";
+                const text = "Happy Birthday! May your day be as incredible as you are, filled with laughter, love, and everything that brings you joy, surrounded by cherished friends and family. This special day marks another amazing year of you, and I'm so grateful for the light you bring into the world; I hope this next chapter brings exciting adventures, big dreams coming true, and endless happy memories, reminding you how truly wonderful you are! ❤️✨";
                 let i = 0;
-                function type() { if(i < text.length) { document.getElementById('typed-text').innerHTML += text.charAt(i); i++; setTimeout(type, 70); } }
+                function type() {
+                    if(i < text.length) {
+                        document.getElementById('typing-text').innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(type, 50);
+                    }
+                }
                 type();
             }
-            if(step < labels.length) btn.innerText = labels[step];
-        });
+            if(step < tasks.length) btn.innerText = tasks[step];
+        };
     </script>
 </body>
 </html>
-
