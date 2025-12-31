@@ -5,74 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday!</title>
     <style>
-        body { background-color: #fce4bd; margin: 0; font-family: 'Arial', sans-serif; overflow: hidden; height: 100vh; text-align: center; }
-        
-        /* 1. Hanging Lights */
-        .light-row { display: flex; justify-content: space-around; opacity: 0; transition: 2s; padding: 0; margin-top: -5px; }
-        .light { width: 35px; height: 45px; background: url('https://cdn-icons-png.flaticon.com/512/702/702797.png') no-repeat center/contain; list-style: none; filter: grayscale(100%); }
-        .on { filter: none; drop-shadow(0 0 10px yellow); }
-
-        /* 2. Bunting Banner */
-        .banner { width: 95%; margin-top: 20px; opacity: 0; transform: translateY(-100px); transition: 4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        
-        /* 3. Cake and Candle */
-        .cake { width: 160px; margin-top: 30px; opacity: 0; transition: 3s; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
-        
-        /* 4. Floating Balloons */
-        .balloon { width: 60px; height: 80px; position: absolute; bottom: -120px; background-size: contain; background-repeat: no-repeat; animation: float 10s linear forwards; }
-        @keyframes float { to { transform: translateY(-130vh) rotate(20deg); } }
-
-        /* 5. Message Box */
-        .msg-container { display: none; background: rgba(255,255,255,0.95); padding: 25px; border-radius: 20px; width: 85%; margin: 20px auto; border: 2px solid #4a908f; position: absolute; top: 20%; left: 50%; transform: translateX(-50%); z-index: 50; }
-        
-        button { background: #3c56a5; color: white; border: none; padding: 18px 30px; border-radius: 50px; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); font-weight: bold; font-size: 16px; box-shadow: 0 5px 15px rgba(60,86,165,0.4); z-index: 100; cursor: pointer; }
+        /* CSS STYLING */
+        :root { --bg-color: #fce4bd; }
+        body { background-color: var(--bg-color); margin: 0; font-family: 'Arial', sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; position: relative; text-align: center; }
+        .lightbulb-container { display: flex; justify-content: space-around; padding: 0; margin-top: -10px; opacity: 0; transition: opacity 3s ease; }
+        .bulb { list-style: none; width: 30px; height: 40px; border-radius: 50%; background: #999; position: relative; }
+        .bulb.active.yellow { background: #ffff00; box-shadow: 0 0 20px #ffff00; }
+        .bulb.active.red { background: #ff4d4d; box-shadow: 0 0 20px #ff4d4d; }
+        .bulb.active.blue { background: #4d94ff; box-shadow: 0 0 20px #4d94ff; }
+        .bulb.active.green { background: #5cd65c; box-shadow: 0 0 20px #5cd65c; }
+        .banner-wrapper { margin-top: 50px; opacity: 0; transform: translateY(-50px); transition: all 4s ease; font-weight: bold; font-size: 2rem; color: #4a908f; }
+        .balloon { width: 50px; height: 70px; border-radius: 50%; position: absolute; bottom: -100px; animation: floatUp 10s linear forwards; }
+        @keyframes floatUp { to { transform: translateY(-120vh) rotate(10deg); } }
+        .cake-container { position: absolute; bottom: 180px; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 4s ease; }
+        .cake { width: 150px; height: 100px; background: #6d4c41; border-radius: 10px; position: relative; border-bottom: 5px solid #4e342e; }
+        .candle { width: 8px; height: 30px; background: #ff80ab; margin: 0 auto; position: relative; top: -20px; }
+        .flame { width: 12px; height: 18px; background: #ffeb3b; border-radius: 50% 50% 20% 20%; position: absolute; top: -20px; left: -2px; opacity: 0; transition: opacity 2s; box-shadow: 0 0 10px orange; }
+        .controls { position: fixed; bottom: 40px; width: 100%; left: 0; }
+        button { background: #3c56a5; color: white; border: none; padding: 15px 25px; font-size: 1rem; border-radius: 8px; cursor: pointer; }
+        .message-box { display: none; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 15px; width: 80%; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 10; }
     </style>
 </head>
 <body>
-    <ul class="light-row" id="lights">
-        <li class="light"></li><li class="light"></li><li class="light"></li><li class="light"></li><li class="light"></li><li class="light"></li>
-    </ul>
 
-    <img src="https://img.freepik.com/free-vector/happy-birthday-flags-garland_1284-42845.jpg" class="banner" id="banner">
-    <div id="balloon-area"></div>
-    <img src="https://cdn-icons-png.flaticon.com/512/3132/3132715.png" class="cake" id="cake">
+    <div class="container">
+        <ul class="lightbulb-container" id="bulbs">
+            <li class="bulb yellow"></li><li class="bulb red"></li><li class="bulb blue"></li><li class="bulb green"></li><li class="bulb red"></li><li class="bulb yellow"></li>
+        </ul>
+        <div class="banner-wrapper" id="banner">HAPPY BIRTHDAY</div>
+        <div id="balloons-zone"></div>
+        <div class="cake-container" id="cake-section">
+            <div class="candle"><div class="flame" id="flame"></div></div>
+            <div class="cake"></div>
+        </div>
+        <div id="message-box" class="message-box"><p id="typed-text"></p></div>
+        <div class="controls"><button id="action-btn">LET'S DECORATE</button></div>
+    </div>
 
-    <div class="msg-container" id="box"><p id="typing" style="font-size: 1.05rem; color: #333; line-height: 1.6; text-align: left;"></p></div>
-
-    <button id="mainBtn">TURN ON LIGHTS</button>
-    
-    <audio id="piano" loop><source src="https://raw.githubusercontent.com/Ansh-Rathod/Happy-Birthday/main/music.mp3"></audio>
+    <audio id="bday-music" loop><source src="https://raw.githubusercontent.com/Ansh-Rathod/Happy-Birthday/main/music.mp3" type="audio/mpeg"></audio>
 
     <script>
-        const btn = document.getElementById('mainBtn');
-        const piano = document.getElementById('piano');
-        let stage = 0;
-        const labels = ["TURN ON LIGHTS", "PLAY MUSIC", "LET'S DECORATE", "FLY WITH BALLOONS", "DELICIOUS CAKE", "A MESSAGE FOR YOU"];
+        const btn = document.getElementById('action-btn');
+        const music = document.getElementById('bday-music');
+        let step = 0;
+        const labels = ["LET'S DECORATE", "TURN ON LIGHTS", "PLAY MUSIC", "FLY WITH BALLOONS", "MOST DELICIOUS CAKE EVER", "LIGHT CANDLE", "HAPPY BIRTHDAY", "A MESSAGE FOR YOU"];
 
-        btn.onclick = () => {
-            stage++;
-            if(stage==1) { document.getElementById('lights').style.opacity=1; document.querySelectorAll('.light').forEach(l=>l.classList.add('on')); }
-            if(stage==2) piano.play();
-            if(stage==3) { document.getElementById('banner').style.opacity=1; document.getElementById('banner').style.transform="translateY(0)"; }
-            if(stage==4) {
-                for(let i=0; i<15; i++) setTimeout(() => {
-                    const b = document.createElement('div'); b.className='balloon'; 
-                    b.style.left=Math.random()*85+'%';
-                    b.style.backgroundImage = "url('https://cdn-icons-png.flaticon.com/512/3144/3144815.png')";
-                    document.getElementById('balloon-area').appendChild(b);
-                }, i*400);
+        btn.addEventListener('click', () => {
+            step++;
+            if(step === 1) { document.getElementById('banner').style.opacity = '1'; document.getElementById('banner').style.transform = 'translateY(0)'; }
+            if(step === 2) { document.getElementById('bulbs').style.opacity = '1'; document.querySelectorAll('.bulb').forEach(b => b.classList.add('active')); }
+            if(step === 3) { music.play(); }
+            if(step === 4) { 
+                for(let i=0; i<15; i++) {
+                    setTimeout(() => {
+                        const b = document.createElement('div');
+                        b.className = 'balloon';
+                        b.style.left = Math.random() * 90 + '%';
+                        b.style.backgroundColor = ['#ff7675','#74b9ff','#55efc4','#ffeaa7'][Math.floor(Math.random()*4)];
+                        document.getElementById('balloons-zone').appendChild(b);
+                    }, i * 300);
+                }
             }
-            if(stage==5) document.getElementById('cake').style.opacity=1;
-            if(stage==6) {
-                btn.style.display='none'; 
-                document.getElementById('box').style.display='block';
-                const str = "Happy Birthday! May your day be as incredible as you are, filled with laughter, love, and everything that brings you joy, surrounded by cherished friends and family. This special day marks another amazing year of you, and I'm so grateful for the light you bring into the world; I hope this next chapter brings exciting adventures, big dreams coming true, and endless happy memories, reminding you how truly wonderful you are! ❤️✨";
-                let n=0;
-                function runText() { if(n<str.length) { document.getElementById('typing').innerHTML+=str.charAt(n); n++; setTimeout(runText, 45); } }
-                runText();
+            if(step === 5) { document.getElementById('cake-section').style.opacity = '1'; }
+            if(step === 6) { document.getElementById('flame').style.opacity = '1'; }
+            if(step === 8) {
+                btn.style.display = 'none';
+                document.getElementById('message-box').style.display = 'block';
+                const text = "Happy Birthday!🎂 May your day be as incredible as you are, filled with laughter, love, and everything that brings you joy, surrounded by cherished friends and family. This special day marks another amazing year of you, and I'm so grateful for the light you bring into the world; I hope this next chapter brings exciting adventures, big dreams coming true, and endless happy memories, reminding you how truly wonderful you are! ❤️✨️";
+                let i = 0;
+                function type() { if(i < text.length) { document.getElementById('typed-text').innerHTML += text.charAt(i); i++; setTimeout(type, 70); } }
+                type();
             }
-            if(stage < labels.length) btn.innerText = labels[stage];
-        };
+            if(step < labels.length) btn.innerText = labels[step];
+        });
     </script>
 </body>
 </html>
+
